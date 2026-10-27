@@ -1,0 +1,419 @@
+
+/* ========================================
+   ROWWEN HÈZE – KAART
+   Volledige vormgeving
+   ======================================== */
+
+:root {
+  --color-background: #f5f3ed;
+  --color-surface: #ffffff;
+  --color-text: #26342a;
+  --color-muted: #667067;
+  --color-header: #263b2b;
+  --color-accent: #d9b65d;
+  --color-border: #deded5;
+
+  --radius: 14px;
+  --shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+
+  --content-width: 1200px;
+}
+
+/* ========================================
+   BASIS
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  text-align: center;
+}
+
+button {
+  font: inherit;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.site-header {
+  width: 100%;
+  padding: 32px 20px;
+  background: var(--color-header);
+  color: #ffffff;
+  text-align: center;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  line-height: 1.2;
+}
+
+.page-description {
+  max-width: 700px;
+  margin: 12px 0 0;
+  color: #e5e9e4;
+}
+
+/* ========================================
+   HOOFDINHOUD
+   ======================================== */
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+.map-section,
+.legend-section {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto 30px;
+}
+
+/* ========================================
+   KAARTBEDIENING
+   ======================================== */
+
+.map-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  width: 100%;
+  margin: 0 auto 16px;
+  text-align: center;
+}
+
+.map-hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zoom-controls button {
+  min-height: 42px;
+  padding: 8px 15px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.zoom-controls button:hover {
+  background: #e9eee7;
+}
+
+.zoom-controls button:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+#zoom-in,
+#zoom-out {
+  min-width: 44px;
+  font-size: 1.25rem;
+}
+
+/* ========================================
+   KAARTVENSTER
+   Geen schaakbord of raster als CSS-achtergrond
+   ======================================== */
+
+.map-viewport {
+  position: relative;
+
+  width: 100%;
+  height: min(72vh, 850px);
+  min-height: 320px;
+
+  margin: 0 auto;
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+
+  background: #ffffff;
+  box-shadow: var(--shadow);
+
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.map-viewport:active {
+  cursor: grabbing;
+}
+
+.map-viewport:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* De afbeelding wordt door JavaScript gepositioneerd en geschaald. */
+
+#map {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: none;
+  max-height: none;
+  width: auto;
+  height: auto;
+  transform-origin: center center;
+  will-change: transform;
+  -webkit-user-drag: none;
+}
+
+/* Foutmelding wanneer de afbeelding niet geladen kan worden. */
+
+.map-error {
+  position: absolute;
+  inset: 20px;
+
+  display: grid;
+  place-items: center;
+
+  margin: 0;
+  color: #9d2525;
+  text-align: center;
+}
+
+.map-error[hidden] {
+  display: none;
+}
+
+/* ========================================
+   LEGENDA
+   Gecentreerd, met items onder elkaar
+   ======================================== */
+
+.legend-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 28px 20px;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+
+  text-align: center;
+}
+
+.legend-section h2 {
+  width: 100%;
+  margin: 0;
+
+  font-size: 1.6rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.legend-intro {
+  width: 100%;
+  margin: 8px 0 22px;
+
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* De hele lijst staat gecentreerd op de pagina. */
+
+.legend-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Ieder legenda-item heeft een vaste maximale breedte. */
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+
+  width: 100%;
+  max-width: 340px;
+  min-height: 52px;
+  padding: 10px 14px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+
+  background: #ffffff;
+  text-align: left;
+}
+
+.legend-color {
+  display: block;
+
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+}
+
+.legend-name {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 70px;
+  padding: 22px 20px;
+
+  background: var(--color-header);
+  color: #e5e9e4;
+
+  text-align: center;
+}
+
+.site-footer p {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+/* ========================================
+   MOBIELE WEERGAVE
+   ======================================== */
+
+@media (max-width: 600px) {
+  .site-header {
+    padding: 26px 16px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .page-description {
+    font-size: 0.95rem;
+  }
+
+  main {
+    padding: 20px 12px 28px;
+  }
+
+  .map-section,
+  .legend-section {
+    margin-bottom: 22px;
+  }
+
+  .map-toolbar {
+    gap: 10px;
+  }
+
+  .map-hint {
+    max-width: 360px;
+    font-size: 0.85rem;
+  }
+
+  .map-viewport {
+    height: 65vh;
+    min-height: 300px;
+    border-radius: 10px;
+  }
+
+  .zoom-controls {
+    gap: 6px;
+  }
+
+  .zoom-controls button {
+    padding: 8px 12px;
+  }
+
+  .legend-section {
+    padding: 22px 14px;
+  }
+
+  .legend-section h2 {
+    font-size: 1.45rem;
+  }
+
+  .legend-grid {
+    gap: 8px;
+  }
+
+  .legend-item {
+    max-width: 320px;
+  }
+
+  .site-footer {
+    padding: 20px 14px;
+  }
+}

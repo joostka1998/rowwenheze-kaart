@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#263b2b">
+  <title>Rowwen Hèze – Kaart</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <h1 id="page-title">Rowwen Hèze – Kaart</h1>
+    </div>
+  </header>
+
+  <main>
+    <section class="map-section" aria-label="Kaart">
+      <div class="map-toolbar">
+
+        <div class="zoom-controls" aria-label="Kaartbediening">
+          <button id="zoom-out" type="button" aria-label="Uitzoomen">
+            −
+          </button>
+          <button id="zoom-reset" type="button">
+            Herstellen
+          </button>
+          <button id="zoom-in" type="button" aria-label="Inzoomen">
+            +
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="map-viewport"
+        class="map-viewport"
+        tabindex="0"
+        role="region"
+        aria-label="Interactieve kaart. Sleep om te verplaatsen en gebruik de muiswiel om in te zoomen."
+      >
+		<img
+		  id="map"
+		  src="assets/kaart.png"
+		  alt="Plattegrond"
+		  draggable="false"
+		>
+        <p id="map-error" class="map-error" hidden>
+          De kaart kon niet worden geladen. Controleer de bestandsnaam
+          en de locatie van de afbeelding.
+        </p>
+      </div>
+    </section>
+
+    <section class="legend-section" aria-labelledby="legend-title">
+      <h2 id="legend-title">Legenda</h2>
+      <div id="legend" class="legend-grid">
+        <p>Legenda laden…</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p id="footer-text">
+      Made by Briezert
+    </p>
+  </footer>
+</body>
+</html>
