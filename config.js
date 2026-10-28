@@ -16,7 +16,7 @@ window.MAP_CONFIG = {
       ]
     },
     {
-      name: "Thom W",
+      name: "Da wok is",
       color: "#1E88E5",
       house_numbers: [351, 352, 353],
       circles: [
@@ -57,7 +57,7 @@ window.MAP_CONFIG = {
       ]
     },
     {
-      name: "Sabine",
+      name: "Sabine en Jet en co",
       color: "#1affa7",
       house_numbers: [322],
       circles: [
