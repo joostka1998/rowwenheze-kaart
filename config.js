@@ -34,7 +34,7 @@ window.MAP_CONFIG = {
     },
     {
       name: "Kos goed grinze",
-      color: "#1ee539",
+      color: "#186e23",
       house_numbers: [202],
       circles: [
         { x: 2468, y: 1113, diameter: 63 }
@@ -54,6 +54,14 @@ window.MAP_CONFIG = {
       house_numbers: [229, 230, 231],
       circles: [
         { x: 2985, y: 1405, diameter: 100 }
+      ]
+    },
+    {
+      name: "Sabine",
+      color: "#1affa7",
+      house_numbers: [322],
+      circles: [
+        { x: 2150, y: 1827, diameter: 58 }
       ]
     }
   ]
