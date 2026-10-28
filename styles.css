@@ -9,7 +9,7 @@
   --color-surface: #ffffff;
   --color-text: #26342a;
   --color-muted: #667067;
-  --color-header: #263b2b;
+  --color-header: #fe0000;
   --color-accent: #d9b65d;
   --color-border: #deded5;
 
@@ -51,19 +51,41 @@ button {
 
 .site-header {
   width: 100%;
-  padding: 32px 20px;
+  padding: 20px;
   background: var(--color-header);
   color: #ffffff;
   text-align: center;
 }
 
 .header-content {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: var(--content-width);
+  min-height: 76px;
   margin: 0 auto;
+}
+
+.site-logo {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  display: block;
+  width: 76px;
+  height: 76px;
+  transform: translateY(-50%);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.header-copy {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
 }
 
 .eyebrow {
@@ -79,6 +101,12 @@ h1 {
   margin: 0;
   font-size: clamp(1.7rem, 4vw, 2.6rem);
   line-height: 1.2;
+}
+
+.header-note {
+  margin: 8px 0 0;
+  color: #e5e9e4;
+  font-size: 0.85rem;
 }
 
 .page-description {
@@ -345,6 +373,7 @@ main {
    ======================================== */
 
 .site-footer {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -359,7 +388,18 @@ main {
   text-align: center;
 }
 
+.footer-easter-egg {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='18'%3E%3Ctext x='0' y='13' fill='%23ff5736' font-family='Arial' font-size='10'%3Ehovenkokerstraatje%3C/text%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
+  user-select: none;
+}
+
 .site-footer p {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: var(--content-width);
   margin: 0 auto;
@@ -371,11 +411,26 @@ main {
 
 @media (max-width: 600px) {
   .site-header {
-    padding: 26px 16px;
+    padding: 16px 12px;
+  }
+
+  .header-content {
+    min-height: 46px;
+    padding: 0 52px;
+  }
+
+  .site-logo {
+    left: 0;
+    width: 46px;
+    height: 46px;
   }
 
   h1 {
-    font-size: 1.8rem;
+    font-size: clamp(1.35rem, 6vw, 1.8rem);
+  }
+
+  .header-note {
+    font-size: 0.75rem;
   }
 
   .page-description {
