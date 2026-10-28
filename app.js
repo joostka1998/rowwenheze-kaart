@@ -137,7 +137,7 @@
           circle.setAttribute("r", diameter / 2);
           circle.setAttribute("fill", "none");
           circle.setAttribute("stroke", color);
-          circle.setAttribute("stroke-width", "4");
+          circle.setAttribute("stroke-width", "8");
           return circle;
         })
     );
