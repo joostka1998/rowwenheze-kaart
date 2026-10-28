@@ -424,7 +424,31 @@ main {
 
   .legend-table th,
   .legend-table td {
-    padding: 9px 10px;
+    padding: 8px 6px;
+    overflow-wrap: anywhere;
+  }
+
+  .legend-grid {
+    overflow-x: hidden;
+  }
+
+  .legend-table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .legend-table th {
+    font-size: 0.78rem;
+  }
+
+  .legend-table th:first-child,
+  .legend-color-cell {
+    width: 48px;
+  }
+
+  .legend-color {
+    width: 24px;
+    height: 24px;
   }
 
   .site-footer {
