@@ -8,12 +8,53 @@ window.MAP_CONFIG = {
   // Kleur moet een geldige hex-kleur zijn, bijvoorbeeld #E53935.
   legend: [
     {
-      name: "Groep 1",
-      color: "#E53935"
+      name: "Briezert en Co",
+      color: "#E53935",
+      house_numbers: [308],
+      circles: [
+        { x: 2140, y: 1500, diameter: 70 }
+      ]
     },
     {
-      name: "Groep 2",
-      color: "#1E88E5"
+      name: "Thom W",
+      color: "#1E88E5",
+      house_numbers: [351, 352, 353],
+      circles: [
+        { x: 1975, y: 1730, diameter: 107 },
+        { x: 1873, y: 1759, diameter: 60 }
+      ]
+    },
+    {
+      name: "Smikt noar meer",
+      color: "#e51eca",
+      house_numbers: [821, 822],
+      circles: [
+        { x: 1770, y: 1070, diameter: 85 }
+      ]
+    },
+    {
+      name: "Kos goed grinze",
+      color: "#1ee539",
+      house_numbers: [202],
+      circles: [
+        { x: 2468, y: 1113, diameter: 63 }
+      ]
+    },
+    {
+      name: "Kloar bitje",
+      color: "#ddcf0f",
+      house_numbers: [451, 453],
+      circles: [
+        { x: 1516, y: 1710, diameter: 113 }
+      ]
+    },
+    {
+      name: "Alles bej en",
+      color: "#8403fd",
+      house_numbers: [229, 230, 231],
+      circles: [
+        { x: 2985, y: 1405, diameter: 100 }
+      ]
     }
   ]
 };

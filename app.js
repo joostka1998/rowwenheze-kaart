@@ -8,6 +8,13 @@
   const image = $("map");
   const errorElement = $("map-error");
   const legendElement = $("legend");
+  const markerLayer = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+  markerLayer.classList.add("map-markers");
+  markerLayer.setAttribute("aria-hidden", "true");
+  viewport.insertBefore(markerLayer, errorElement);
 
   const MAX_ZOOM = 8;
   const ZOOM_FACTOR = 1.25;
@@ -32,14 +39,17 @@
   setText("footer-text", config.footer);
   if (config.title) document.title = config.title;
 
-  function renderLegend() {
-    const items = (Array.isArray(config.legend) ? config.legend : []).filter(
+  function getLegendItems() {
+    return (Array.isArray(config.legend) ? config.legend : []).filter(
       (item) =>
         item &&
         typeof item.name === "string" &&
         /^#[0-9a-f]{6}$/i.test(item.color)
     );
+  }
 
+  function renderLegend() {
+    const items = getLegendItems();
     if (items.length === 0) {
       const message = document.createElement("p");
       message.textContent = "Er zijn nog geen groepen ingesteld.";
@@ -47,38 +57,119 @@
       return;
     }
 
-    const rows = items.map(({ name, color }) => {
-      const row = document.createElement("div");
-      row.className = "legend-item";
+    const table = document.createElement("table");
+    table.className = "legend-table";
 
+    const header = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    for (const heading of ["Kleur", "Naam Groep", "Huisje(s)"]) {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = heading;
+      headerRow.append(cell);
+    }
+    header.append(headerRow);
+
+    const body = document.createElement("tbody");
+    for (const { name, color, house_numbers } of items) {
+      const row = document.createElement("tr");
+
+      const colorCell = document.createElement("td");
+      colorCell.className = "legend-color-cell";
       const swatch = document.createElement("span");
       swatch.className = "legend-color";
       swatch.style.backgroundColor = color;
       swatch.setAttribute("aria-hidden", "true");
+      colorCell.append(swatch);
 
-      const label = document.createElement("span");
-      label.className = "legend-name";
-      label.textContent = name;
+      const nameCell = document.createElement("td");
+      nameCell.className = "legend-name";
+      nameCell.textContent = name;
 
-      row.append(swatch, label);
-      return row;
-    });
+      const housesCell = document.createElement("td");
+      housesCell.textContent = Array.isArray(house_numbers)
+        ? house_numbers
+            .filter(
+              (number) =>
+                typeof number === "string" ||
+                (typeof number === "number" && Number.isFinite(number))
+            )
+            .map(String)
+            .join(", ")
+        : "";
 
-    legendElement.replaceChildren(...rows);
+      row.append(colorCell, nameCell, housesCell);
+      body.append(row);
+    }
+
+    table.append(header, body);
+    legendElement.replaceChildren(table);
   }
 
   renderLegend();
+
+  function renderMarkers() {
+    const { naturalWidth, naturalHeight } = image;
+    markerLayer.setAttribute("viewBox", `0 0 ${naturalWidth} ${naturalHeight}`);
+    markerLayer.setAttribute("width", naturalWidth);
+    markerLayer.setAttribute("height", naturalHeight);
+    markerLayer.replaceChildren(
+      ...getLegendItems()
+        .flatMap(({ color, circles }) =>
+          (Array.isArray(circles) ? circles : [])
+            .filter(
+              (circle) =>
+                circle &&
+                Number.isFinite(circle.x) &&
+                Number.isFinite(circle.y) &&
+                Number.isFinite(circle.diameter) &&
+                circle.diameter > 0
+            )
+            .map((circle) => ({ ...circle, color }))
+        )
+        .map(({ color, x, y, diameter }) => {
+          const circle = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          circle.setAttribute("cx", x);
+          circle.setAttribute("cy", y);
+          circle.setAttribute("r", diameter / 2);
+          circle.setAttribute("fill", "none");
+          circle.setAttribute("stroke", color);
+          circle.setAttribute("stroke-width", "4");
+          return circle;
+        })
+    );
+  }
 
   /* ---------- Kaart: weergave ---------- */
 
   function renderTransform() {
     frame = 0;
-    image.style.transform =
+    $("zoom-out").disabled = zoom <= minZoom;
+    const transform =
       `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${zoom})`;
+    image.style.transform = transform;
+    markerLayer.style.transform = transform;
+  }
+
+  function clampOffset(offset, imageSize, viewportSize) {
+    const scaledSize = imageSize * zoom;
+    if (scaledSize <= viewportSize) return 0;
+
+    const maxOffset = (scaledSize - viewportSize) / 2;
+    return Math.max(-maxOffset, Math.min(maxOffset, offset));
+  }
+
+  function constrainMapPosition() {
+    offsetX = clampOffset(offsetX, image.naturalWidth, viewport.clientWidth);
+    offsetY = clampOffset(offsetY, image.naturalHeight, viewport.clientHeight);
   }
 
   // Meerdere events per frame samenvoegen tot één update.
   function scheduleRender() {
+    constrainMapPosition();
     if (!frame) frame = requestAnimationFrame(renderTransform);
   }
 
@@ -90,8 +181,8 @@
 
     const fit = Math.min(viewport.clientWidth / w, viewport.clientHeight / h, 1);
 
+    minZoom = fit;
     zoom = fit;
-    minZoom = fit / 2; // je kunt wat verder uitzoomen dan "passend"
     offsetX = 0;       // 0 = precies gecentreerd
     offsetY = 0;
 
@@ -126,6 +217,7 @@
   image.addEventListener("load", () => {
     imageLoaded = true;
     errorElement.hidden = true;
+    renderMarkers();
     fitMap();
   });
 
@@ -140,6 +232,7 @@
 
   if (image.complete && image.naturalWidth > 0) {
     imageLoaded = true;
+    renderMarkers();
     fitMap();
   }
 

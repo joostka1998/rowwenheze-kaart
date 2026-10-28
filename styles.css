@@ -214,7 +214,18 @@ main {
   height: auto;
   transform-origin: center center;
   will-change: transform;
+  filter: grayscale(100%);
   -webkit-user-drag: none;
+}
+
+.map-markers {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  overflow: visible;
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: none;
 }
 
 /* Foutmelding wanneer de afbeelding niet geladen kan worden. */
@@ -276,34 +287,35 @@ main {
 /* De hele lijst staat gecentreerd op de pagina. */
 
 .legend-grid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-
   width: 100%;
+  max-width: 760px;
   margin: 0 auto;
+  overflow-x: auto;
 }
 
-/* Ieder legenda-item heeft een vaste maximale breedte. */
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-
+.legend-table {
   width: 100%;
-  max-width: 340px;
-  min-height: 52px;
-  padding: 10px 14px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-
-  background: #ffffff;
+  min-width: 420px;
+  border-collapse: collapse;
   text-align: left;
+}
+
+.legend-table th,
+.legend-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.legend-table th {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.legend-table th:first-child,
+.legend-color-cell {
+  width: 90px;
+  text-align: center;
 }
 
 .legend-color {
@@ -315,12 +327,17 @@ main {
 
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 6px;
+  margin: 0 auto;
 }
 
 .legend-name {
   overflow-wrap: anywhere;
   font-weight: 600;
   text-align: left;
+}
+
+.legend-table td:last-child {
+  overflow-wrap: anywhere;
 }
 
 /* ========================================
@@ -405,12 +422,9 @@ main {
     font-size: 1.45rem;
   }
 
-  .legend-grid {
-    gap: 8px;
-  }
-
-  .legend-item {
-    max-width: 320px;
+  .legend-table th,
+  .legend-table td {
+    padding: 9px 10px;
   }
 
   .site-footer {

@@ -8,7 +8,7 @@ Een eenvoudige, mobielvriendelijke website voor de Kaart voor slotconcertweekend
 - `index.html` – de webpagina
 - `styles.css` – vormgeving en mobiele weergave
 - `app.js` – zoomen, slepen en de legenda weergeven
-- `config.js` – titel, kaartbestand en groepskleuren
+- `config.js` – titel, kaartbestand, groepskleuren en cirkels
 - `assets/campingkaart.jpg` – de campingkaart
 
 ## Lokaal aanpassen
@@ -17,6 +17,31 @@ Een eenvoudige, mobielvriendelijke website voor de Kaart voor slotconcertweekend
 2. Gebruik bij voorkeur de bestandsnaam `kaart.png`.
 3. Pas de groepen en kleuren aan in `config.js`.
 4. Open `index.html` in een browser om de website te testen.
+
+## Cirkels op de kaart
+
+Elk legenda-item kan meerdere cirkels op de kaart tonen. Voeg voor elke cirkel
+een positie toe aan de `circles`-lijst met eigen `x`, `y` en `diameter`:
+
+```js
+{
+  name: "Groep 1",
+  color: "#E53935",
+  house_numbers: [431, 432, 434],
+  circles: [
+    { x: 300, y: 300, diameter: 120 },
+    { x: 470, y: 500, diameter: 90 }
+  ]
+}
+```
+
+`house_numbers` worden alleen in de legenda getoond; ze maken geen markeringen
+op de kaart. De legenda toont de kleur, groepsnaam en huisjesnummers in aparte
+kolommen.
+
+De coördinaten en diameter zijn in pixels van de originele kaartafbeelding.
+Het nulpunt (`x: 0, y: 0`) ligt linksboven. Alle cirkels gebruiken de kleur
+van het legenda-item en bewegen en schalen mee met de kaart.
 
 ## Online zetten met GitHub Pages
 
