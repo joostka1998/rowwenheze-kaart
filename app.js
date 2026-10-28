@@ -197,8 +197,7 @@
       viewport.clientHeight / image.naturalHeight,
       1
     );
-    minZoom = fit;
-    zoom = Math.max(zoom, minZoom);
+    minZoom = Math.min(fit, minZoom);
     scheduleRender();
   }
 
