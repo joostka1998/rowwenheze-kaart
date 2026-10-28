@@ -189,6 +189,19 @@
     scheduleRender();
   }
 
+  function resizeMap() {
+    if (!imageLoaded) return;
+
+    const fit = Math.min(
+      viewport.clientWidth / image.naturalWidth,
+      viewport.clientHeight / image.naturalHeight,
+      1
+    );
+    minZoom = fit;
+    zoom = Math.max(zoom, minZoom);
+    scheduleRender();
+  }
+
   function zoomAt(nextZoom, clientX, clientY) {
     if (!imageLoaded) return;
 
@@ -337,6 +350,6 @@
   let resizeTimer = 0;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(fitMap, 100);
+    resizeTimer = setTimeout(resizeMap, 100);
   });
 })();
