@@ -9,7 +9,7 @@ window.MAP_CONFIG = {
   legend: [
     {
       name: "Briezert en Co",
-      color: "#E53935",
+      color: "#FF0000",
       house_numbers: [308],
       circles: [
         { x: 2140, y: 1500, diameter: 70 }
@@ -17,7 +17,7 @@ window.MAP_CONFIG = {
     },
     {
       name: "Da wok is",
-      color: "#1E88E5",
+      color: "#4363D8",
       house_numbers: [351, 352, 353],
       circles: [
         { x: 1975, y: 1730, diameter: 107 },
@@ -26,7 +26,7 @@ window.MAP_CONFIG = {
     },
     {
       name: "Smikt noar meer",
-      color: "#e51eca",
+      color: "#FFE119",
       house_numbers: [821, 822],
       circles: [
         { x: 1770, y: 1070, diameter: 85 }
@@ -34,7 +34,7 @@ window.MAP_CONFIG = {
     },
     {
       name: "Kos goed grinze",
-      color: "#186e23",
+      color: "#3CB44B",
       house_numbers: [202],
       circles: [
         { x: 2468, y: 1113, diameter: 63 }
@@ -42,7 +42,7 @@ window.MAP_CONFIG = {
     },
     {
       name: "Kloar bitje",
-      color: "#ddcf0f",
+      color: "#F032E6",
       house_numbers: [451, 453],
       circles: [
         { x: 1516, y: 1710, diameter: 113 }
@@ -50,7 +50,7 @@ window.MAP_CONFIG = {
     },
     {
       name: "Alles bej en",
-      color: "#8403fd",
+      color: "#F58231",
       house_numbers: [229, 230, 231],
       circles: [
         { x: 2985, y: 1405, diameter: 100 }
@@ -58,10 +58,18 @@ window.MAP_CONFIG = {
     },
     {
       name: "Sabine en Jet en co",
-      color: "#1affa7",
+      color: "#911EB4",
       house_numbers: [322],
       circles: [
         { x: 2150, y: 1827, diameter: 58 }
+      ]
+    },
+	{
+      name: "CV Lau J",
+      color: "#BFEF45",
+      house_numbers: [729],
+      circles: [
+        { x: 1100, y: 417, diameter: 61 }
       ]
     }
   ]
