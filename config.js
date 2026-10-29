@@ -71,6 +71,14 @@ window.MAP_CONFIG = {
       circles: [
         { x: 1100, y: 417, diameter: 61 }
       ]
+    },
+	{
+      name: "Nol mar Nie (inschatting)",
+      color: "#FABED4",
+      house_numbers: ["372?", "373?", "374?"],
+      circles: [
+        { x: 1640, y: 2220, diameter: 200 }
+      ]
     }
   ]
 };
