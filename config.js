@@ -79,6 +79,14 @@ window.MAP_CONFIG = {
       circles: [
         { x: 1605, y: 2250, diameter: 185 }
       ]
+    },
+	{
+      name: "Zö Gek Nog Nie",
+      color: "#622A0F",
+      house_numbers: [460, 461, 462, 463],
+      circles: [
+        { x: 1873, y: 1580, diameter: 173 }
+      ]
     }
   ]
 };
