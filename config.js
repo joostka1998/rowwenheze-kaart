@@ -73,11 +73,11 @@ window.MAP_CONFIG = {
       ]
     },
 	{
-      name: "Nol mar Nie (inschatting)",
+      name: "Nol mar Nie",
       color: "#FABED4",
-      house_numbers: ["372?", "373?", "374?"],
+      house_numbers: [373, 374, 375],
       circles: [
-        { x: 1640, y: 2220, diameter: 200 }
+        { x: 1605, y: 2250, diameter: 185 }
       ]
     }
   ]
