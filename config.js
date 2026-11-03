@@ -2,11 +2,10 @@
 // Instellingen voor de eenmalige pop-up op mobiele telefoons.
 window.FIRST_VISIT_POPUP_CONFIG = {
   enabled: true,
-  headline: "Volg ons op Snapchat!",
-  description: "Blijf op de hoogte en volg Rowwen Hèze Kaart op Snapchat.",
-  snapchatButtonText: "Bekijk ons Snapchat-profiel",
-  snapchatUrl: "https://www.snapchat.com/add/jouwgebruikersnaam",
-  closeButtonText: "Misschien later",
+  headline: "Join snapgroep!",
+  snapchatButtonText: "Ja is goed",
+  snapchatUrl: "https://snapchat.com/t/ZZXUQRPg",
+  closeButtonText: "Nee",
   delayMs: 0
 };
 

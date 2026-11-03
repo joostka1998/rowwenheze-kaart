@@ -45,49 +45,36 @@
 
   function initializeFirstVisitPopup() {
     const mobileMediaQuery = window.matchMedia("(max-width: 600px)");
-    if (
-      !popup ||
-      popupConfig.enabled !== true ||
-      !mobileMediaQuery.matches
-    ) {
+    const headerTrigger = $("header-snapchat-trigger");
+    const snapchatUrl =
+      typeof popupConfig.snapchatUrl === "string" && popupConfig.snapchatUrl.trim()
+        ? popupConfig.snapchatUrl
+        : "";
+
+    if (snapchatUrl) {
+      headerTrigger.href = snapchatUrl;
+    } else {
+      headerTrigger.hidden = true;
+    }
+
+    if (!popup || popupConfig.enabled !== true) {
       return;
     }
 
     const storageKey = "rowwenheze-kaart-popup-shown";
-    let alreadySeen = false;
-    try {
-      alreadySeen = window.localStorage.getItem(storageKey) === "true";
-    } catch (error) {
-      console.warn("De pop-upstatus kan niet uit localStorage worden gelezen.", error);
-    }
-    if (alreadySeen) return;
-
     setText("popup-headline", popupConfig.headline);
-    setText("popup-description", popupConfig.description);
     setText("popup-snapchat-text", popupConfig.snapchatButtonText);
     setText("popup-close", popupConfig.closeButtonText);
 
     const snapchatLink = $("popup-snapchat-link");
-    if (typeof popupConfig.snapchatUrl === "string" && popupConfig.snapchatUrl.trim()) {
-      snapchatLink.href = popupConfig.snapchatUrl;
+    if (snapchatUrl) {
+      snapchatLink.href = snapchatUrl;
     } else {
       snapchatLink.hidden = true;
     }
 
-    const closePopup = () => {
-      if (popup.open) popup.close();
-    };
-    $("popup-close").addEventListener("click", closePopup);
-    popup.addEventListener("click", (event) => {
-      if (event.target === popup) closePopup();
-    });
-
-    const delay =
-      Number.isFinite(popupConfig.delayMs) && popupConfig.delayMs > 0
-        ? popupConfig.delayMs
-        : 0;
-    window.setTimeout(() => {
-      if (!mobileMediaQuery.matches) return;
+    const openPopup = () => {
+      if (popup.open) return;
 
       try {
         window.localStorage.setItem(storageKey, "true");
@@ -97,15 +84,32 @@
 
       popup.showModal();
       snapchatLink.focus();
-    }, delay);
-
-    const closeOnDesktop = (event) => {
-      if (!event.matches) closePopup();
     };
-    if (typeof mobileMediaQuery.addEventListener === "function") {
-      mobileMediaQuery.addEventListener("change", closeOnDesktop);
-    } else {
-      mobileMediaQuery.addListener(closeOnDesktop);
+    const closePopup = () => {
+      if (popup.open) popup.close();
+    };
+    headerTrigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      openPopup();
+    });
+    $("popup-close").addEventListener("click", closePopup);
+    popup.addEventListener("click", (event) => {
+      if (event.target === popup) closePopup();
+    });
+
+    let alreadySeen = false;
+    try {
+      alreadySeen = window.localStorage.getItem(storageKey) === "true";
+    } catch (error) {
+      console.warn("De pop-upstatus kan niet uit localStorage worden gelezen.", error);
+    }
+
+    const delay =
+      Number.isFinite(popupConfig.delayMs) && popupConfig.delayMs > 0
+        ? popupConfig.delayMs
+        : 0;
+    if (mobileMediaQuery.matches && !alreadySeen) {
+      window.setTimeout(openPopup, delay);
     }
   }
 
