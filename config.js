@@ -1,4 +1,15 @@
 
+// Instellingen voor de eenmalige pop-up op mobiele telefoons.
+window.FIRST_VISIT_POPUP_CONFIG = {
+  enabled: true,
+  headline: "Volg ons op Snapchat!",
+  description: "Blijf op de hoogte en volg Rowwen Hèze Kaart op Snapchat.",
+  snapchatButtonText: "Bekijk ons Snapchat-profiel",
+  snapchatUrl: "https://www.snapchat.com/add/jouwgebruikersnaam",
+  closeButtonText: "Misschien later",
+  delayMs: 0
+};
+
 window.MAP_CONFIG = {
   // Vervang deze afbeelding elk jaar door de nieuwe kaart.
   // Gebruik bij voorkeur steeds dezelfde bestandsnaam.

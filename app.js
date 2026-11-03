@@ -2,12 +2,14 @@
   "use strict";
 
   const config = window.MAP_CONFIG || {};
+  const popupConfig = window.FIRST_VISIT_POPUP_CONFIG || {};
 
   const $ = (id) => document.getElementById(id);
   const viewport = $("map-viewport");
   const image = $("map");
   const errorElement = $("map-error");
   const legendElement = $("legend");
+  const popup = $("first-visit-popup");
   const markerLayer = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "svg"
@@ -38,6 +40,76 @@
   setText("page-title", config.title);
   setText("footer-text", config.footer);
   if (config.title) document.title = config.title;
+
+  /* ---------- Eenmalige mobiele pop-up ---------- */
+
+  function initializeFirstVisitPopup() {
+    const mobileMediaQuery = window.matchMedia("(max-width: 600px)");
+    if (
+      !popup ||
+      popupConfig.enabled !== true ||
+      !mobileMediaQuery.matches
+    ) {
+      return;
+    }
+
+    const storageKey = "rowwenheze-kaart-popup-shown";
+    let alreadySeen = false;
+    try {
+      alreadySeen = window.localStorage.getItem(storageKey) === "true";
+    } catch (error) {
+      console.warn("De pop-upstatus kan niet uit localStorage worden gelezen.", error);
+    }
+    if (alreadySeen) return;
+
+    setText("popup-headline", popupConfig.headline);
+    setText("popup-description", popupConfig.description);
+    setText("popup-snapchat-text", popupConfig.snapchatButtonText);
+    setText("popup-close", popupConfig.closeButtonText);
+
+    const snapchatLink = $("popup-snapchat-link");
+    if (typeof popupConfig.snapchatUrl === "string" && popupConfig.snapchatUrl.trim()) {
+      snapchatLink.href = popupConfig.snapchatUrl;
+    } else {
+      snapchatLink.hidden = true;
+    }
+
+    const closePopup = () => {
+      if (popup.open) popup.close();
+    };
+    $("popup-close").addEventListener("click", closePopup);
+    popup.addEventListener("click", (event) => {
+      if (event.target === popup) closePopup();
+    });
+
+    const delay =
+      Number.isFinite(popupConfig.delayMs) && popupConfig.delayMs > 0
+        ? popupConfig.delayMs
+        : 0;
+    window.setTimeout(() => {
+      if (!mobileMediaQuery.matches) return;
+
+      try {
+        window.localStorage.setItem(storageKey, "true");
+      } catch (error) {
+        console.warn("De pop-upstatus kan niet in localStorage worden opgeslagen.", error);
+      }
+
+      popup.showModal();
+      snapchatLink.focus();
+    }, delay);
+
+    const closeOnDesktop = (event) => {
+      if (!event.matches) closePopup();
+    };
+    if (typeof mobileMediaQuery.addEventListener === "function") {
+      mobileMediaQuery.addEventListener("change", closeOnDesktop);
+    } else {
+      mobileMediaQuery.addListener(closeOnDesktop);
+    }
+  }
+
+  initializeFirstVisitPopup();
 
   function getLegendItems() {
     return (Array.isArray(config.legend) ? config.legend : []).filter(
