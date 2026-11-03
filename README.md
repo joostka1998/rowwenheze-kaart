@@ -39,6 +39,10 @@ een positie toe aan de `circles`-lijst met eigen `x`, `y` en `diameter`:
 op de kaart. De legenda toont de kleur, groepsnaam en huisjesnummers in aparte
 kolommen.
 
+Groepsnamen in de legenda zijn aanklikbaar: de kaart zoomt naar de markering(en)
+van die groep en licht ze kort uit. Bij meerdere markeringen wordt het
+gemiddelde van hun kaartcoördinaten als middelpunt gebruikt.
+
 De coördinaten en diameter zijn in pixels van de originele kaartafbeelding.
 Het nulpunt (`x: 0, y: 0`) ligt linksboven. Alle cirkels gebruiken de kleur
 van het legenda-item en bewegen en schalen mee met de kaart.

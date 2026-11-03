@@ -285,6 +285,20 @@ main {
   pointer-events: none;
 }
 
+.map-markers circle.is-highlighted {
+  animation: marker-pulse 1.5s ease-out;
+}
+
+@keyframes marker-pulse {
+  0%,
+  100% {
+    stroke-width: 8;
+  }
+  35% {
+    stroke-width: 22;
+  }
+}
+
 /* Foutmelding wanneer de afbeelding niet geladen kan worden. */
 
 .map-error {
@@ -335,7 +349,7 @@ main {
 
 .legend-intro {
   width: 100%;
-  margin: 8px 0 22px;
+  margin: 8px 0 16px;
 
   color: var(--color-muted);
   text-align: center;
@@ -391,6 +405,33 @@ main {
   overflow-wrap: anywhere;
   font-weight: 600;
   text-align: left;
+}
+
+.legend-name-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #a32929;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.legend-name-button:hover {
+  color: #6f1717;
+  text-decoration-color: currentColor;
+}
+
+.legend-name-button:focus-visible {
+  border-radius: 2px;
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 .legend-table td:last-child {
@@ -538,12 +579,22 @@ main {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .first-visit-popup[open] {
     animation: none;
   }
 
-  .popup-snapchat-link {
+  .popup-snapchat-link,
+  .legend-name-button {
     transition: none;
+  }
+
+  .map-markers circle.is-highlighted {
+    animation: none;
+    stroke-width: 16;
   }
 }
 

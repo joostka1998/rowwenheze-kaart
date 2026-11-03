@@ -20,6 +20,11 @@
 
   const MAX_ZOOM = 8;
   const ZOOM_FACTOR = 1.25;
+  const GROUP_ZOOM = 1.5;
+  const GROUP_ANIMATION_DURATION = 600;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
 
   let zoom = 1;
   let minZoom = 0.1;
@@ -27,6 +32,8 @@
   let offsetY = 0;
   let imageLoaded = false;
   let frame = 0;
+  let zoomAnimationFrame = 0;
+  let highlightTimer = 0;
 
   /* ---------- Tekst en legenda ---------- */
 
@@ -147,7 +154,7 @@
     header.append(headerRow);
 
     const body = document.createElement("tbody");
-    for (const { name, color, house_numbers } of items) {
+    for (const [groupIndex, { name, color, house_numbers }] of items.entries()) {
       const row = document.createElement("tr");
 
       const colorCell = document.createElement("td");
@@ -160,7 +167,12 @@
 
       const nameCell = document.createElement("td");
       nameCell.className = "legend-name";
-      nameCell.textContent = name;
+      const nameButton = document.createElement("button");
+      nameButton.className = "legend-name-button";
+      nameButton.type = "button";
+      nameButton.dataset.groupIndex = String(groupIndex);
+      nameButton.textContent = name;
+      nameCell.append(nameButton);
 
       const housesCell = document.createElement("td");
       housesCell.textContent = Array.isArray(house_numbers)
@@ -191,35 +203,46 @@
     markerLayer.setAttribute("height", naturalHeight);
     markerLayer.replaceChildren(
       ...getLegendItems()
-        .flatMap(({ color, circles }) =>
-          (Array.isArray(circles) ? circles : [])
-            .filter(
-              (circle) =>
-                circle &&
-                Number.isFinite(circle.x) &&
-                Number.isFinite(circle.y) &&
-                Number.isFinite(circle.diameter) &&
-                circle.diameter > 0
-            )
-            .map((circle) => ({ ...circle, color }))
+        .flatMap(({ color, circles }, groupIndex) =>
+          (Array.isArray(circles) ? circles : []).map((circle) => ({
+            circle,
+            color,
+            groupIndex
+          }))
         )
-        .map(({ color, x, y, diameter }) => {
-          const circle = document.createElementNS(
+        .filter(
+          ({ circle }) =>
+            circle &&
+            Number.isFinite(circle.x) &&
+            Number.isFinite(circle.y) &&
+            Number.isFinite(circle.diameter) &&
+            circle.diameter > 0
+        )
+        .map(({ circle: circleData, color, groupIndex }) => {
+          const marker = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "circle"
           );
-          circle.setAttribute("cx", x);
-          circle.setAttribute("cy", y);
-          circle.setAttribute("r", diameter / 2);
-          circle.setAttribute("fill", "none");
-          circle.setAttribute("stroke", color);
-          circle.setAttribute("stroke-width", "8");
-          return circle;
+          marker.setAttribute("cx", circleData.x);
+          marker.setAttribute("cy", circleData.y);
+          marker.setAttribute("r", circleData.diameter / 2);
+          marker.setAttribute("fill", "none");
+          marker.setAttribute("stroke", color);
+          marker.setAttribute("stroke-width", "8");
+          marker.setAttribute("data-group-index", groupIndex);
+          return marker;
         })
     );
   }
 
   /* ---------- Kaart: weergave ---------- */
+
+  function cancelZoomAnimation() {
+    if (zoomAnimationFrame) {
+      cancelAnimationFrame(zoomAnimationFrame);
+      zoomAnimationFrame = 0;
+    }
+  }
 
   function renderTransform() {
     frame = 0;
@@ -230,8 +253,8 @@
     markerLayer.style.transform = transform;
   }
 
-  function clampOffset(offset, imageSize, viewportSize) {
-    const scaledSize = imageSize * zoom;
+  function clampOffset(offset, imageSize, viewportSize, scale = zoom) {
+    const scaledSize = imageSize * scale;
     if (scaledSize <= viewportSize) return 0;
 
     const maxOffset = (scaledSize - viewportSize) / 2;
@@ -245,6 +268,7 @@
 
   // Meerdere events per frame samenvoegen tot één update.
   function scheduleRender() {
+    cancelZoomAnimation();
     constrainMapPosition();
     if (!frame) frame = requestAnimationFrame(renderTransform);
   }
@@ -299,6 +323,107 @@
     const rect = viewport.getBoundingClientRect();
     zoomAt(nextZoom, rect.left + rect.width / 2, rect.top + rect.height / 2);
   }
+
+  function animateToGroup(x, y, groupIndex) {
+    cancelZoomAnimation();
+
+    const targetZoom = Math.min(MAX_ZOOM, Math.max(minZoom, GROUP_ZOOM));
+    const targetOffsetX = clampOffset(
+      -(x - image.naturalWidth / 2) * targetZoom,
+      image.naturalWidth,
+      viewport.clientWidth,
+      targetZoom
+    );
+    const targetOffsetY = clampOffset(
+      -(y - image.naturalHeight / 2) * targetZoom,
+      image.naturalHeight,
+      viewport.clientHeight,
+      targetZoom
+    );
+
+    if (frame) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    }
+
+    if (prefersReducedMotion.matches) {
+      zoom = targetZoom;
+      offsetX = targetOffsetX;
+      offsetY = targetOffsetY;
+      renderTransform();
+    } else {
+      const startedAt = performance.now();
+      const startZoom = zoom;
+      const startOffsetX = offsetX;
+      const startOffsetY = offsetY;
+
+      const animate = (now) => {
+        const progress = Math.min((now - startedAt) / GROUP_ANIMATION_DURATION, 1);
+        const eased = progress < 0.5
+          ? 4 * progress ** 3
+          : 1 - ((-2 * progress + 2) ** 3) / 2;
+
+        zoom = startZoom + (targetZoom - startZoom) * eased;
+        offsetX = startOffsetX + (targetOffsetX - startOffsetX) * eased;
+        offsetY = startOffsetY + (targetOffsetY - startOffsetY) * eased;
+        renderTransform();
+
+        if (progress < 1) {
+          zoomAnimationFrame = requestAnimationFrame(animate);
+        } else {
+          zoomAnimationFrame = 0;
+        }
+      };
+
+      zoomAnimationFrame = requestAnimationFrame(animate);
+    }
+
+    if (highlightTimer) window.clearTimeout(highlightTimer);
+    markerLayer.querySelectorAll(".is-highlighted").forEach((circle) => {
+      circle.classList.remove("is-highlighted");
+    });
+    markerLayer
+      .querySelectorAll(`[data-group-index="${groupIndex}"]`)
+      .forEach((circle) => circle.classList.add("is-highlighted"));
+    highlightTimer = window.setTimeout(() => {
+      markerLayer.querySelectorAll(".is-highlighted").forEach((circle) => {
+        circle.classList.remove("is-highlighted");
+      });
+      highlightTimer = 0;
+    }, 1500);
+  }
+
+  legendElement.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-group-index]");
+    if (!button || !legendElement.contains(button) || !imageLoaded) return;
+
+    const groupIndex = Number(button.dataset.groupIndex);
+    const item = getLegendItems()[groupIndex];
+    const circles = item && Array.isArray(item.circles)
+      ? item.circles.filter(
+          (circle) =>
+            circle &&
+            Number.isFinite(circle.x) &&
+            Number.isFinite(circle.y) &&
+            Number.isFinite(circle.diameter) &&
+            circle.diameter > 0
+        )
+      : [];
+    if (circles.length === 0) return;
+
+    const center = circles.reduce(
+      (total, circle) => ({ x: total.x + circle.x, y: total.y + circle.y }),
+      { x: 0, y: 0 }
+    );
+    const x = center.x / circles.length;
+    const y = center.y / circles.length;
+
+    viewport.scrollIntoView({
+      behavior: prefersReducedMotion.matches ? "auto" : "smooth",
+      block: "center"
+    });
+    animateToGroup(x, y, groupIndex);
+  });
 
   /* ---------- Afbeelding laden ---------- */
 
