@@ -87,6 +87,22 @@ window.MAP_CONFIG = {
       circles: [
         { x: 1873, y: 1580, diameter: 173 }
       ]
-    }
+    },
+	{
+      name: "Da heurt nie",
+      color: "#969aff",
+      house_numbers: [662],
+      circles: [
+        { x: 1360, y: 1175, diameter: 69 }
+      ]
+    },
+	{
+      name: "Berneschnitzel",
+      color: "#ffcd94",
+      house_numbers: [357],
+      circles: [
+        { x: 1960, y: 2007, diameter: 63 }
+      ]
+    },
   ]
 };
