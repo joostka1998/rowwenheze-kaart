@@ -119,7 +119,7 @@ window.MAP_CONFIG = {
 	  color: "#f63894",
 	  house_numbers: [309],
       circles: [
-        { x: 2140, y: 1450, diameter: 63 }
+        { x: 2140, y: 1350, diameter: 63 }
       ]
     }
   ]
