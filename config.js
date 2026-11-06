@@ -1,4 +1,4 @@
-
+8
 // Instellingen voor de eenmalige pop-up op mobiele telefoons.
 window.FIRST_VISIT_POPUP_CONFIG = {
   enabled: true,
@@ -115,11 +115,11 @@ window.MAP_CONFIG = {
       ]
     },
 	{
-		name: "Wokkelientjes",  
-		color: "#f63894",
-		house_numbers: [309],
+	  name: "Wokkelientjes",  
+	  color: "#f63894",
+	  house_numbers: [309],
       circles: [
-        { x: 1900, y: 2007, diameter: 63 }
+        { x: 2140, y: 1450, diameter: 63 }
       ]
     }
   ]
