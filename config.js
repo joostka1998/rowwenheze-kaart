@@ -114,5 +114,13 @@ window.MAP_CONFIG = {
         { x: 1960, y: 2007, diameter: 63 }
       ]
     },
+	{
+		name: "Wokkelientjes",  
+		color: "#f63894",
+		house_numbers: [309],
+      circles: [
+        { x: 1900, y: 2007, diameter: 63 }
+      ]
+    }
   ]
 };
